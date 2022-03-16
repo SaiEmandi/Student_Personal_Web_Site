@@ -1,0 +1,45 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+
+<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
+
+<!--<div class="container">-->
+<div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8"><h2>Project <b>Details</b></h2></div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                    <div class='btn btn-info' id="displaymessage" style="display:none;width:100%;margin-top:10px;"></div>
+                </div>
+            </div>
+   <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proj in project %}
+                    <tr>
+                        <td>{{ proj.id }}</td>
+                        <td>{{ proj.name }}</td>
+                        <td>{{ proj.description }}</td>
+                        <td>
+                            <a class="add" title="Add" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-user-plus"></i></a>
+                            <a class="edit" title="Edit" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-pencil"></i></a>
+                            <a class="delete" title="Delete" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content1 %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="vertical-nav bg-white">
+            <div class="py-4 px-3 mb-4 bg-light">
+                <div class="media d-flex align-items-center"><img src="https://bootstrapious.com/i/snippets/sn-v-nav/avatar.png" alt="..." width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+                    <div class="media-body">
+                     <h4 class="m-0">Poojitha</h4>
+                        <p class="font-weight-light text-muted mb-0">Web developer</p>
+                    </div>
+                 </div>
+            </div>
+
+            <ul class="nav flex-column bg-white mb-0">
+                <li class="nav-item">
+                     <a href="{{ url_for('index')  }}" class="nav-link text-dark font-italic bg-light">
+                        <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
+                         Introduction
+                     </a>
+                </li>
+                 <li class="nav-item">
+                     <a href="{{ url_for('skill')  }}" class="nav-link text-dark font-italic">
+                         <i class="fa fa-cubes mr-3 text-primary fa-fw"></i>
+                        Skillset
+                     </a>
+                 </li>
+                    <li class="nav-item">
+                      <a href="{{ url_for('education')  }}" class="nav-link text-dark font-italic">
+                         <i class="fa fa-graduation-cap mr-3 text-primary fa-fw"></i>
+                          Education
+                       </a>
+                 </li>
+                <li class="nav-item">
+                  <a href="{{ url_for('project')  }}" class="nav-link text-dark font-italic">
+                            <i class="fa fa-code mr-3 text-primary fa-fw"></i>
+                            Projects
+                        </a>
+                </li>
+            </ul>
+
+            <!--<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('index')  }}" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('skill')  }}" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Skills</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('education')  }}" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Education</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('project')  }}" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Project</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+            </div>-->
+        </div>
+        <div class="col py-3">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

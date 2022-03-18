@@ -85,6 +85,12 @@ table.table td a.edit {
 table.table td a.delete {
     color: #E34724;
 }
+table.table td a.cancel {
+    color: red;
+}
+table.table td a.update {
+    color: green;
+}
 table.table td i {
     font-size: 19px;
 }
@@ -106,16 +112,14 @@ table.table td i {
         position: relative;
         top: 3px;
     }
-    table.table .form-control {
-        height: 32px;
-        line-height: 32px;
-        box-shadow: none;
-        border-radius: 2px;
-    }
- table.table .form-control.error {
-  border-color: #f50000;
- }
+
  table.table td .add {
+  display: none;
+ }
+ table.table td .cancel {
+  display: none;
+ }
+ table.table td .save {
   display: none;
  }
 table td {word-wrap:break-word;}

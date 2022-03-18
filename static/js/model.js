@@ -1,3 +1,4 @@
+const edit_row_data = {}
 $(document).ready(function(){
     document.getElementById('loader').style.display = "block";
     document.getElementById('projecttab').style.display = "none";
@@ -9,9 +10,9 @@ $(document).ready(function(){
         $(this).attr("disabled", "disabled");
         var index = $("table tbody tr:last-child").index();
         var proj = '<tr id="newrow"><form id="newitemform">' +
-            '<td>#</td>' +
+            '<td style="display:none">#</td>' +
             '<td><input type="text" class="form-control" name="newname" id="newname" required></td>' +
-            '<td><textarea class="form-control" name="newdescription" rows="4" columns="30" id="newdescription" required></textarea></td>' +
+            '<td><textarea class="form-control" name="newdescription" rows="2" columns="15" id="newdescription" required></textarea></td>' +
             '<td><input type="date" name="newitemsdate" id="newstartdate" class="form-control" required></td>' +
             '<td><input type="date" name="newitemedate" id="newenddate" class="form-control" required></td>' +
             '<td><a class="newadd" title="Add" data-toggle="tooltip" id="newadd"><i class="fa fa-plus"></i></a><a class="newdelete" title="Delete" id="newdelete"><i class="fa fa-trash-o"></i></a>'+
@@ -77,45 +78,55 @@ $(document).ready(function(){
         var txtdescription = $("#txtdescription").val();
         var start_date = $("#estart_date").val();
         var end_date = $("#eend_date").val();
-        fetch("/projectdetails/api/"+id+"/", {
-            method: "PUT",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-             body: JSON.stringify({ id: id, name: txtname, description: txtdescription, start_date: start_date, end_date: end_date})
-        })
-        .then(response => response.json())
-        .then(json => {
-            document.getElementById('projecttab').disabled = true
-            get_projects()
-            $(".add-new").attr("disabled", false);
-        })
+        if(txtname === '' || txtdescription === '' || start_date === '' || end_date === ''){
+            toastr.error('Please fill all the fields');
+        }else{
+            fetch("/projectdetails/api/"+id+"/", {
+                method: "PUT",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                 body: JSON.stringify({ id: id, name: txtname, description: txtdescription, start_date: start_date, end_date: end_date})
+            })
+            .then(response => response.json())
+            .then(json => {
+                document.getElementById('projecttab').disabled = true
+                get_projects()
+                $(".add-new").attr("disabled", false);
+            })
+        }
     });
     // Edit proj on edit button click
     $(document).on("click", ".edit", function(){
         $(this).parents("tr").find("td:not(:last-child)").each(function(i){
             if (i=='0'){
                 var idname = 'txtid';
+                edit_row_data['id'] = $(this).text()
             }else if (i=='1'){
                 var idname = 'txtname';
+                edit_row_data['name'] = $(this).text()
             }else if (i=='2'){
                 var idname = 'txtdescription';
+                edit_row_data['description'] = $(this).text()
             }else if (i=='3'){
                 var idname = 'estart_date';
+                edit_row_data['start_date'] = $(this).text()
             }else if (i=='4'){
                 var idname = 'eend_date';
+                edit_row_data['end_date'] = $(this).text()
             }else{}
             if(i==1){
                 $(this).html('<input type="text" max-length=100 name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
             }else if(i==2){
-                $(this).html('<textarea max-length=1000 name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text()+'</textarea>');
+                $(this).html('<textarea max-length=1000 name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text() +'</textarea>');
             }else if(i==3 || i==4){
                 $(this).html('<input type="date" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
             }
         });
-        $(this).parents("tr").find(".add, .edit").toggle();
+        $(this).parents("tr").find(".save, .edit").toggle();
+        $(this).parents("tr").find(".delete, .cancel").toggle();
         $(".add-new").attr("disabled", "disabled");
-        $(this).parents("tr").find(".add").removeClass("add").addClass("update");
+        $(this).parents("tr").find(".save").removeClass("save").addClass("update");
     });
     //Delete the newly temp item
     $(document).on("click", ".newdelete", function(){
@@ -125,16 +136,9 @@ $(document).ready(function(){
     });
 
     $(document).on("click", ".newadd", function(){
-        console.log("Add new row logic here...........................................")
-        console.log($('#newname').val())
-        console.log($('#newdescription').val())
-        console.log($('#newstartdate').val())
-        console.log($('#newenddate').val())
         if($('#newname').val() === '' || $('#newdescription').val() === '' || $('#newstartdate').val() === '' || $('#newenddate').val() === ''){
-            console.log("Please fill all the fields")
             toastr.error('Please fill all the fields');
         }else{
-            console.log("Ready to create a new object...................")
             fetch("/projectdetails/api/", {
                 method: "POST",
                 headers: {
@@ -151,9 +155,28 @@ $(document).ready(function(){
         }
     });
 
+    $(document).on("click", ".cancel", function(){
+        $(this).parents("tr").find("td:not(:last-child)").each(function(i){
+            if(i==0){
+                $(this).html(edit_row_data['id']);
+            }else if(i==1){
+                 $(this).html(edit_row_data['name'])
+            }else if(i==2){
+                $(this).html(edit_row_data['description']);
+            }else if(i==3){
+                $(this).html(edit_row_data['start_date']);
+            }else if(i==4){
+                 $(this).html(edit_row_data['end_date'])
+            }
+            $(".add-new").removeAttr("disabled");
+            $(this).parents("tr").find(".edit, .update").toggle();
+            $(this).parents("tr").find(".cancel, .delete").toggle();
+            $(this).parents("tr").find(".update").removeClass("update").addClass("edit");
+            $('#save').css("display", "none");
+            this.edit_row_data = {}
+        });
 
-
-
+    });
 });
 
 function get_projects() {
@@ -163,12 +186,12 @@ function get_projects() {
     .then(response => response.json())
     .then(json => {
         var tdata = ''
-        var tdata = '<thead><tr><th width="1px">#</th><th width="20px">Name</th><th width="40px">Description</th><th width="15px">Start Date</th><th width="15px">End Date</th><th width="5px">Actions</th></tr></thead><tbody>'
+        var tdata = '<thead><tr><th width="1px" style="display:none">#</th><th width="20px">Name</th><th width="40px">Description</th><th width="15px">Start Date</th><th width="15px">End Date</th><th width="5px">Actions</th></tr></thead><tbody>'
         // Create a variable to store HTML
         if(json && json.data &&  json.data.length > 0){
             for(var pdata of json.data){
-                tdata += '<tr><td width="1px">'+pdata.id+'</td><td>'+pdata.name+'</td><td>'+pdata.description+'</td><td>'+pdata.start_date+'</td><td>'+pdata.end_date+'</td>'
-                tdata +='<td><a class="add" title="Add" data-toggle="tooltip" id="'+pdata.id +'"><i class="fa fa-save"></i></a><a class="edit" title="Edit" data-toggle="tooltip" id="'+pdata.id+'"><i class="fa fa-pencil"></i></a><a class="delete" title="Delete" data-toggle="tooltip" id="'+pdata.id+'"><i class="fa fa-trash-o"></i></a>'
+                tdata += '<tr><td width="1px" style="display:none">'+pdata.id+'</td><td>'+pdata.name+'</td><td>'+pdata.description+'</td><td>'+pdata.start_date+'</td><td>'+pdata.end_date+'</td>'
+                tdata +='<td><a class="save" title="Update" data-toggle="tooltip" id="'+pdata.id +'"><i class="fa fa-save"></i></a><a class="edit" title="Edit" data-toggle="tooltip" id="'+pdata.id+'"><i class="fa fa-pencil"></i></a><a class="delete" title="Delete" data-toggle="tooltip" id="'+pdata.id+'"><i class="fa fa-trash-o"></i></a><a class="cancel" title="cancel" data-toggle="tooltip" id="'+pdata.id+'"><i color="red" class="fa fa-close"></i></a></td>'
             }
             tdata += '</tbody>'
             document.getElementById("projects_table").innerHTML = tdata

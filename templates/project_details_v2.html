@@ -1,0 +1,34 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+
+<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
+
+<!--<div class="container">-->
+<div class="table-responsive">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row loader" id="loader">
+                <center>
+                    <img src="images/ZZ5H.gif" style="width:100px;height:100px;">
+                    <br><br>
+                    <h2>Loading Projects..................</h2>
+                </center>
+            </div>
+            <div class="row" id="projecttab">
+                <div class="col-sm-4"><h2><b>Project Details</b></h2></div>
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button><br>
+                </div>
+<!--                <div class='btn btn-info' id="displaymessage" style="display:none;width:100%;margin-top:10px;"></div>-->
+            </div>
+        </div>
+        <div class = "table-responsive">
+            <table id="projects_table" class="table table-bordered">
+            </table>
+        </div>
+
+        <center><div id="noproject"></div></center>
+    </div>
+</div>
+
+{% endblock %}

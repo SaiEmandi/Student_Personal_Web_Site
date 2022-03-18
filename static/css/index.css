@@ -118,3 +118,27 @@ table.table td i {
  table.table td .add {
   display: none;
  }
+table td {word-wrap:break-word;}
+
+.msgbox-close {
+  color: $msgbox-close-color;
+  font-size: inherit;
+  text-decoration: none;
+  margin: 0 $msgbox-close-margin;
+  flex-grow: 0;
+  flex-shrink: 0;
+  position: relative;
+  transition:
+    color $msgbox-close-transition-time ease-out,
+    text-shadow $msgbox-close-transition-time ease-out;
+  &:hover {
+    color: $msgbox-close-hover-color;
+    text-shadow: $msgbox-close-hover-text-shadow;
+  }
+  &:first-child {
+    margin-left: auto;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}

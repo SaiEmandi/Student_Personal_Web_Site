@@ -2,7 +2,7 @@ from flask import Flask,render_template,request,redirect, jsonify
 from flask_restful import Resource, Api
 from models import db, ProjectDetails
 from flask.views import MethodView
-import datetime
+import datetime, json
 from sqlalchemy import inspect
 
 app = Flask(__name__)
@@ -36,10 +36,12 @@ class projectdetails(MethodView) :
 
     def post(self):
         try :
-            name = request.form.get('name', None)
-            description = request.form.get('description', None)
-            start_date = request.form.get('start_date', None)
-            end_date = request.form.get('end_date', None)
+            print(request.data)
+            rdata = json.loads(request.data)
+            name = rdata.get('name', None)
+            description = rdata.get('description', None)
+            start_date = rdata.get('start_date', None)
+            end_date = rdata.get('end_date', None)
             if start_date :
                 sdate = datetime.datetime.strptime(start_date,'%Y-%m-%d')
             else :
@@ -59,16 +61,21 @@ class projectdetails(MethodView) :
 
     def put(self, id):
         try :
-            name = request.form.get('name', None)
-            description = request.form.get('description', None)
-            start_date = request.form.get('start_date', None)
-            end_date = request.form.get('end_date', None)
+            print(request)
+            print(request.data)
+            rdata = json.loads(request.data)
+            name = rdata.get('name', None)
+            description = rdata.get('description', None)
+            start_date = rdata.get('start_date', None)
+            end_date = rdata.get('end_date', None)
             if start_date :
                 sdate = datetime.datetime.strptime(start_date,'%Y-%m-%d')
             else :
                 sdate = None
             if end_date :
                 edate = datetime.datetime.strptime(end_date,'%Y-%m-%d')
+            else :
+                edate = None
             pdetails = ProjectDetails.query.get(id)
             pdetails.name=name
             pdetails.description=description
@@ -82,8 +89,10 @@ class projectdetails(MethodView) :
             return {'success' : False}
 
     def delete(self, id):
+        print("Came here..........................")
         try :
             pdetails = ProjectDetails.query.filter_by(id=id).delete()
+            db.session.commit()
             return {'success' : True}
         except Exception as e :
             print(e)
@@ -95,7 +104,7 @@ class projectdetails(MethodView) :
 project_view = projectdetails.as_view('projectdetails')
 app.add_url_rule('/projectdetails/api/', defaults={'id': None},view_func=project_view, methods=['GET',])
 app.add_url_rule('/projectdetails/api/', view_func=project_view, methods=['POST',])
-app.add_url_rule('/projectdetails/api/<int:id>', view_func=project_view, methods=['GET', 'PUT', 'DELETE'])
+app.add_url_rule('/projectdetails/api/<int:id>/', view_func=project_view, methods=['GET', 'PUT', 'DELETE'])
 
 
 @app.route('/')
@@ -110,9 +119,23 @@ def skill() :
 def education() :
     return render_template('education.html')
 
-@app.route('/project', methods=['POST','GET'])
+def row2dict(row):
+    d = {}
+    for column in row.__table__.columns:
+        d[column.name] = str(getattr(row, column.name))
+    return d
+
+@app.route('/project', methods=['GET'])
 def project():
-    return render_template('project_details.html')
+    plist = []
+    try :
+        pdata = ProjectDetails.query.all()
+    except Exception as e :
+        print(e)
+        pdata = []
+    for data in pdata :
+        plist.append(row2dict(data))
+    return render_template('project_details_v2.html',project=plist)
 
 @app.route('/<path:path>')
 def static_file(path):

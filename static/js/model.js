@@ -11,9 +11,9 @@ $(document).ready(function(){
         var index = $("table tbody tr:last-child").index();
         var proj = '<tr id="newrow"><form id="newitemform">' +
             '<td style="display:none">#</td>' +
-            '<td><input type="text" class="form-control" name="newname" id="newname" required></td>' +
-            '<td><textarea class="form-control" name="newdescription" rows="2" columns="15" id="newdescription" required></textarea></td>' +
-            '<td><textarea class="form-control" name="newskills" rows="2" columns="15" id="newskills" required></textarea></td>' +
+            '<td><input type="text" max-length="100" class="form-control" name="newname" id="newname" required></td>' +
+            '<td><textarea max-length="1000" class="form-control" name="newdescription" rows="2" columns="15" id="newdescription" required></textarea></td>' +
+            '<td><textarea max-length="200" class="form-control" name="newskills" rows="2" columns="15" id="newskills" required></textarea></td>' +
             '<td><input type="date" name="newitemsdate" id="newstartdate" class="form-control" required></td>' +
             '<td><input type="date" name="newitemedate" id="newenddate" class="form-control" required></td>' +
             '<td><a class="newadd" title="Add" data-toggle="tooltip" id="newadd"><i class="fa fa-plus"></i></a><a class="newdelete" title="Delete" id="newdelete"><i class="fa fa-trash-o"></i></a>'+
@@ -135,9 +135,11 @@ $(document).ready(function(){
                 edit_row_data['end_date'] = $(this).text()
             }else{}
             if(i==1){
-                $(this).html('<input type="text" max-length=100 name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
-            }else if(i==2 || i==3){
-                $(this).html('<textarea max-length=1000 name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text() +'</textarea>');
+                $(this).html('<input type="text" max-length="100" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
+            }else if(i==2){
+                $(this).html('<textarea max-length="1000" name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text() +'</textarea>');
+            }}else if(i==3){
+                $(this).html('<textarea max-length="200" name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text() +'</textarea>');
             }else if(i==4 || i==5){
                 $(this).html('<input type="date" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
             }

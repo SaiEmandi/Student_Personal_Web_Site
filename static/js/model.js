@@ -48,7 +48,7 @@ $(document).ready(function(){
             $("#displaymessage").html(data);
             $("#displaymessage").show();
         });
-        $(this).parents("tr").find(".error").first().focus();
+        $(this).parents("tr").find(".error").focus();
         if(!empty){
             input.each(function(){
                 $(this).parent("td").html($(this).val());
@@ -76,6 +76,16 @@ $(document).ready(function(){
     });
     // update rec proj on edit button click
     $(document).on("click", ".update", function(){
+        var empty = false;
+        var input = $(this).parents("tr").find('input[type="text"], input[type="date"], textarea');
+        input.each(function(){
+            if(!$(this).val()){
+                $(this).addClass("error");
+                empty = true;
+            } else{
+                $(this).removeClass("error");
+            }
+        });
         $("tr input, tr textarea").prop('disabled', true);
         $(this).parents("tr").find('input[type=text]').prop('disabled', true)
         var id = $(this).attr("id");
@@ -87,6 +97,7 @@ $(document).ready(function(){
         var start_date = $("#estart_date").val();
         var end_date = $("#eend_date").val();
         if(txtname === '' || txtdescription === '' || txtskills === '' || start_date === '' || end_date === ''){
+             $(this).parents("tr").find(".error").focus();
             $("tr input, tr textarea").prop('disabled', false);
             $(this).parents("tr").find('input[type=text]').prop('disabled', false)
             toastr.error('Please fill all the fields');
@@ -138,7 +149,7 @@ $(document).ready(function(){
                 $(this).html('<input type="text" max-length="100" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
             }else if(i==2){
                 $(this).html('<textarea max-length="1000" name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text() +'</textarea>');
-            }}else if(i==3){
+            }else if(i==3){
                 $(this).html('<textarea max-length="200" name="updaterec" id="' + idname + '" class="form-control" required>'+$(this).text() +'</textarea>');
             }else if(i==4 || i==5){
                 $(this).html('<input type="date" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '" required>');
@@ -165,7 +176,18 @@ $(document).ready(function(){
     });
 
     $(document).on("click", ".newadd", function(){
+        var empty1 = false;
+        var inputerror = $(this).parents("tr").find('input[type="text"], input[type="date"], textarea');
+        inputerror.each(function(){
+            if(!$(this).val()){
+                $(this).addClass("error");
+                empty1 = true;
+            } else{
+                $(this).removeClass("error");
+            }
+        });
         if($('#newname').val() === '' || $('#newdescription').val() === '' || $('#newskills').val() === '' ||  $('#newstartdate').val() === '' || $('#newenddate').val() === ''){
+            $(this).parents("tr").find(".error").focus();
             toastr.error('Please fill all the fields');
         }else{
             fetch("/projectdetails/api/", {

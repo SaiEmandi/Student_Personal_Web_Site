@@ -40,6 +40,7 @@ class projectdetails(MethodView) :
             rdata = json.loads(request.data)
             name = rdata.get('name', None)
             description = rdata.get('description', None)
+            skills = rdata.get('skills', None)
             start_date = rdata.get('start_date', None)
             end_date = rdata.get('end_date', None)
             if start_date :
@@ -50,7 +51,7 @@ class projectdetails(MethodView) :
                 edate = datetime.datetime.strptime(end_date,'%Y-%m-%d')
             else :
                 edate = None
-            pdetails = ProjectDetails(name=name, description=description, start_date=sdate, end_date=edate)
+            pdetails = ProjectDetails(name=name, description=description, skills=skills, start_date=sdate, end_date=edate)
             # Flask-SQLAlchemy magic adds record to database
             db.session.add(pdetails)
             db.session.commit()
@@ -66,6 +67,7 @@ class projectdetails(MethodView) :
             rdata = json.loads(request.data)
             name = rdata.get('name', None)
             description = rdata.get('description', None)
+            skills = rdata.get('skills', None)
             start_date = rdata.get('start_date', None)
             end_date = rdata.get('end_date', None)
             if start_date :
@@ -79,6 +81,7 @@ class projectdetails(MethodView) :
             pdetails = ProjectDetails.query.get(id)
             pdetails.name=name
             pdetails.description=description
+            pdetails.skills=skills
             pdetails.start_date = sdate
             pdetails.end_date = edate
             db.session.commit()

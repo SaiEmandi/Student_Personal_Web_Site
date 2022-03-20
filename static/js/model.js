@@ -2,7 +2,7 @@ const edit_row_data = {}
 $(document).ready(function(){
     document.getElementById('loader').style.display = "block";
     document.getElementById('projecttab').style.display = "none";
-    get_projects()
+    get_projects(message='Loading Projects...........')
     $('[data-toggle="tooltip"]').tooltip();
     var actions = $("table td:last-child").html();
     // Append table with add proj form on add new button click
@@ -70,12 +70,14 @@ $(document).ready(function(){
         .then(response => response.json())
         .then(json => {
             document.getElementById('projecttab').disabled = true
-            get_projects()
+            get_projects(message='Loading Projects...........')
 
         })
     });
     // update rec proj on edit button click
     $(document).on("click", ".update", function(){
+        $("tr input, tr textarea").prop('disabled', true);
+        $(this).parents("tr").find('input[type=text]').prop('disabled', true)
         var id = $(this).attr("id");
         var string = id;
         var txtid = $("#txtid").val();
@@ -85,8 +87,12 @@ $(document).ready(function(){
         var start_date = $("#estart_date").val();
         var end_date = $("#eend_date").val();
         if(txtname === '' || txtdescription === '' || txtskills === '' || start_date === '' || end_date === ''){
+            $("tr input, tr textarea").prop('disabled', false);
+            $(this).parents("tr").find('input[type=text]').prop('disabled', false)
             toastr.error('Please fill all the fields');
         }else{
+            document.getElementById('loader').style.display = "block";
+            document.getElementById('loader_message').innerHTML = 'Updating Data.......'
             fetch("/projectdetails/api/"+id+"/", {
                 method: "PUT",
                 headers: {
@@ -97,7 +103,7 @@ $(document).ready(function(){
             .then(response => response.json())
             .then(json => {
                 document.getElementById('projecttab').disabled = true
-                get_projects()
+                get_projects(message='Loading Projects...........')
                 $(".add-new").attr("disabled", false);
                 $(".edit_disabled").removeClass("edit_disabled").addClass("edit");
                 $(".delete_disabled").removeClass("delete_disabled").addClass("delete");
@@ -170,7 +176,7 @@ $(document).ready(function(){
             .then(response => response.json())
             .then(json => {
                 document.getElementById('projecttab').disabled = true
-                get_projects()
+                get_projects(message='Adding Projects...........')
                 $(".add-new").attr("disabled", false);
             })
         }
@@ -209,9 +215,11 @@ $(document).ready(function(){
 
     });
 });
-
-function get_projects() {
+function get_projects(message='') {
     document.getElementById('loader').style.display = "block";
+    if(message != ''){
+        document.getElementById('loader_message').innerHTML = message
+    }
     fetch("/projectdetails/api/")
     // Converting received data to JSON
     .then(response => response.json())

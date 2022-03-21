@@ -31,7 +31,7 @@
                         <td>{{ proj.name }}</td>
                         <td>{{ proj.description }}</td>
                         <td>
-                            <a class="add" title="Add" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-user-plus"></i></a>
+                            <a class="add" title="Add" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-save"></i></a>
                             <a class="edit" title="Edit" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-pencil"></i></a>
                             <a class="delete" title="Delete" data-toggle="tooltip" id="{{proj.id}}"><i class="fa fa-trash-o"></i></a>
                         </td>
@@ -41,5 +41,7 @@
             </table>
         </div>
     </div>
+{% endblock %}
 
+{% block jscript %}
 {% endblock %}
